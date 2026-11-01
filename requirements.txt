@@ -1,0 +1,2 @@
+psutil>=5.9
+pydivert>=2.1.0
