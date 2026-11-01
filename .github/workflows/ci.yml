@@ -1,5 +1,11 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_call:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: windows-latest
@@ -14,3 +20,30 @@ jobs:
       - run: python -m pip install -r requirements-dev.txt
       - run: python -m py_compile netquota.py
       - run: python -m pytest -q
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip pip-audit
+      - run: pip-audit -r requirements-dev.txt
+
+  build:
+    needs: [test, security]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python build_prod_exe.py
+      - run: Get-FileHash dist\NetQuota.exe -Algorithm SHA256 | Format-List
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NetQuota-windows-x64
+          path: dist\NetQuota.exe
+          if-no-files-found: error
+          retention-days: 14

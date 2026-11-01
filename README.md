@@ -27,7 +27,7 @@
 The release is a standalone, one-file Windows application: Python and a terminal are not required. The windowed executable requests Administrator rights because packet capture and firewall changes require them. The UAC prompt is from Windows, not a command window.
 
 ### Build a standalone .exe
-This is for maintainers creating a release, not something end users need to do. On Windows, install Python 3.10+ with Tcl/Tk, then double-click `build_exe.bat` or run `python build_prod_exe.py`. The build creates `dist\NetQuota.exe` as a one-file, windowed executable and prints its SHA-256. Pushing a tag like `v1.0.0` also builds and attaches the executable to a GitHub Release automatically.
+This is for maintainers creating a release, not something end users need to do. On Windows, install Python 3.10+ with Tcl/Tk, then double-click `build_exe.bat` or run `python build_prod_exe.py`. The build creates `dist\NetQuota.exe` as a one-file, windowed executable and prints its SHA-256. Pushing a tag like `v1.0.0` runs the tests on Python 3.10–3.13, audits dependencies, builds the executable, and attaches it to a GitHub Release after those checks pass. CI also stores the executable as a downloadable artifact.
 
 ### Run from source
 For development only; end users should use the release executable.
